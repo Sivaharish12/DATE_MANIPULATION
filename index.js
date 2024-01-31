@@ -1,53 +1,46 @@
-// Performing the date Manipulation using the Moment
+const { DateTime } = require("luxon");
 
-const moment=require('moment-timezone')
-const date=moment.tz(1706603382000,"UTC")
-const ds= date;
-console.log("utc->pacific");
+// get the date object
+const local=DateTime.fromMillis(1706603382000)
+const utc=local.setZone('UTC')
+// convert the timezone to pacific
+const pacific=utc.setZone('America/Los_Angeles');
+
+console.log('utc->pacific');
 const utc_to_pacific={
-    'given_data':ds.format('YYYY-MM-DD HH:mm:ss'),
-    'converted_data':date.tz("America/Los_Angeles").format('YYYY-MM-DD HH:mm:ss')
+    'given_time':utc.toFormat('yyyy MM dd HH:MM:ss'),
+    'converted_time':pacific.toFormat('yyyy MM dd HH:MM:ss'),
 };
-
 console.log(utc_to_pacific);
+
+
 console.log();
 
 
-
-
-// direct convertion of the milliseconds to the US
-console.log("pacific->utc");
-const date1 = moment.tz(1706603382000, 'America/Los_Angeles');
-const pacific_to_utc = {
-    'given_data': date1.format('YYYY-MM-DD HH:mm:ss '), 
-    'converted_data': date1.clone().tz('UTC').format('YYYY-MM-DD HH:mm:ss ') 
+const pacific_with_ms=DateTime.fromMillis(1706603382000).setZone('America/Los_Angeles');
+console.log('pacific->utc');
+const pacific_to_utc={
+    "given_time":pacific_with_ms.toFormat('yyyy MM dd HH:MM:ss'),
+    'converted_time':pacific_with_ms.setZone('UTC').toFormat('yyyy MM dd HH:MM:ss'),
 };
 console.log(pacific_to_utc);
 
 
-
-const date2=moment.tz(1706603382000,'America/Los_Angeles');
-const pacific_to_indian=date2.tz('Asia/Kolkata')
-console.log("pacific->india");
-pac_to_ind={
-    'given_data':date1.format('YYYY-MM-DD HH:mm:ss'),
-    'converted_data':pacific_to_indian.format('YYYY-MM-DD HH:mm:ss')
-}
-console.log(pac_to_ind);
 console.log();
+tx=pacific_with_ms.setZone('UTC')
+console.log('pacific->india');
+const pacific_to_india={
+    'given_time':tx.toFormat('yyyy MM dd HH:MM:ss'),
+    'converted_time':tx.setZone('Asia/Kolkata').toFormat('yyyy MM dd HH:MM:ss'),
+};
+console.log(pacific_to_india,'\n');
 
 
-console.log(date1.isDST());
-
-
-// Trying the timestamp which falls on the DST
-const dstpacific = moment.tz('2024-06-15T12:00:00', 'America/Los_Angeles');
-console.log(dstpacific.isDST());
-console.log("\nDST pacific->india");
-DST_pac_to_ind={
-    'given_data':dstpacific.format('YYYY-MM-DD HH:mm:ss'),
-    'converted_data':dstpacific.tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss')
-}
-console.log(DST_pac_to_ind);
-
-
+const dst_pacific=DateTime.fromISO('2024-06-15T12:00:00').setZone('America/Los_Angeles')
+console.log(`is the following date is dst : ${dst_pacific.isInDST} \n`);
+console.log('dst_pacific->ust');
+const dst_pacific_to_ust={
+    'given_time':dst_pacific.toFormat('yyyy MM dd HH:MM:ss'),
+    'converted_time':dst_pacific.setZone('UTC').toFormat('yyyy MM dd HH:MM:ss'),
+};
+console.log(dst_pacific_to_ust);
